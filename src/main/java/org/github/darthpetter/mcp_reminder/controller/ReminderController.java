@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.Operation;
-import jakarta.ws.rs.BadRequestException;
 import lombok.AllArgsConstructor;
 
 @RestController
@@ -61,7 +60,10 @@ public class ReminderController {
             .build();
 
             if(reminder.getDueDate()==null){
-                throw new BadRequestException("`dueDate` have been received as null.");
+                return ResponseEntity.badRequest().body(Map.of(
+                    "ok",false,
+                    "message","`dueDate` have been received as null."
+                ));
             }
             logger.info("Reminder to be saved={}",reminder);
             this.reminderRepository.save(reminder);
@@ -69,12 +71,6 @@ public class ReminderController {
             return ResponseEntity.ok().body(Map.of(
                 "ok", true,
                 "reminder",reminder
-            ));
-        }catch(BadRequestException e){
-            logger.error("ERROR "+e.getMessage(),e);
-            return ResponseEntity.badRequest().body(Map.of(
-                "ok", false,
-                "message",e.getMessage()
             ));
         }catch(Exception e){
             logger.error("ERROR "+e.getMessage(),e);

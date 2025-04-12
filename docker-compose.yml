@@ -1,0 +1,18 @@
+services:
+  mcp-reminder:
+    container_name: mcp_reminder
+    image: ringcentral/jdk:21
+    volumes:
+    - .:/app
+    - /app/target
+    command: ["sleep","infinity"]
+    ports:
+      - 80:8080
+    networks:
+      - agents
+
+networks:
+  agents:
+    external: true
+    name: agents
+    
